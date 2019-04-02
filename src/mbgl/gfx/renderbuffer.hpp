@@ -4,6 +4,7 @@
 #include <mbgl/util/size.hpp>
 
 #include <memory>
+#include <cassert>
 
 namespace mbgl {
 namespace gfx {
@@ -18,21 +19,30 @@ public:
 template <RenderbufferPixelType renderbufferType>
 class Renderbuffer {
 public:
-    Renderbuffer(Size size_, std::unique_ptr<const RenderbufferResource>&& resource_)
-        : size(std::move(size_)), resource(std::move(resource_)) {
+    Renderbuffer(const Size size_, std::unique_ptr<RenderbufferResource>&& resource_)
+        : size(size_), resource(std::move(resource_)) {
     }
 
     void shouldClear(bool clear) {
         dirty = clear;
     }
+
     bool needsClearing() {
         return dirty;
     }
 
+    template <typename T = RenderbufferResource>
+    T& getResource() const {
+        assert(resource);
+        return static_cast<T&>(*resource);
+    }
+
     static constexpr RenderbufferPixelType type = renderbufferType;
     Size size;
-    std::unique_ptr<const RenderbufferResource> resource;
     bool dirty;
+
+protected:
+    std::unique_ptr<RenderbufferResource> resource;
 };
 
 } // namespace gfx
