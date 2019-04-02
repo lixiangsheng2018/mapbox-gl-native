@@ -246,6 +246,12 @@ private:
 public:
     // For testing
     bool disableVAOExtension = false;
+
+#if not defined(NDEBUG)
+public:
+    void visualizeStencilBuffer() override;
+    void visualizeDepthBuffer(float depthRangeSize) override;
+#endif
 };
 
 } // namespace gl
