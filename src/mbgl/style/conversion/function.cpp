@@ -563,11 +563,13 @@ static optional<std::unique_ptr<Expression>> convertCategoricalFunction(type::Ty
     return nullopt;
 }
 
-template <class T, class Fn>
-optional<std::unique_ptr<Expression>> composite(type::Type type,
-                                                const Convertible& value,
-                                                Error& error,
-                                                const Fn& makeInnerExpression) {
+template<class T, class Fn>
+optional<std::map<double, std::unique_ptr<Expression>>> makeCompositeStops(
+    type::Type type,
+    const Convertible& value,
+    Error &error,
+    const Fn& makeInnerExpression)
+{
     auto base = convertBase(value, error);
     if (!base) {
         return nullopt;
@@ -637,11 +639,34 @@ optional<std::unique_ptr<Expression>> composite(type::Type type,
         stops.emplace(e.first, makeInnerExpression(type, *base, std::move(e.second)));
     }
 
-    if (interpolatable(type)) {
-        return interpolate(type, linear(), zoom(), std::move(stops));
-    } else {
-        return step(type, zoom(), std::move(stops));
+    return std::move(stops);
+}
+
+template <class T, class Fn>
+optional<std::unique_ptr<Expression>> compositeStep(type::Type type,
+                                                    const Convertible& value,
+                                                    Error& error,
+                                                    const Fn& makeInnerExpression) {
+    auto stops = makeCompositeStops<T, Fn>(type, value, error, makeInnerExpression);
+    if (!stops) {
+        return nullopt;
     }
+
+    omitFirstStop(*stops);
+    return step(type, zoom(), std::move(*stops));
+}
+
+template <class T, class Fn>
+optional<std::unique_ptr<Expression>> compositeInterpolate(type::Type type,
+                                                           const Convertible& value,
+                                                           Error& error,
+                                                           const Fn& makeInnerExpression) {
+    auto stops = makeCompositeStops<T, Fn>(type, value, error, makeInnerExpression);
+    if (!stops) {
+        return nullopt;
+    }
+
+    return interpolate(type, linear(), zoom(), std::move(*stops));
 }
 
 optional<std::unique_ptr<Expression>> convertFunctionToExpression(type::Type type,
@@ -783,7 +808,7 @@ optional<std::unique_ptr<Expression>> convertFunctionToExpression(type::Type typ
         if (toBool(*sourceValue)) {
             switch (functionType) {
             case FunctionType::Categorical:
-                return composite<bool>(type, value, err, [&] (type::Type type_, double, std::map<bool, std::unique_ptr<Expression>> stops) {
+                return compositeStep<bool>(type, value, err, [&] (type::Type type_, double, std::map<bool, std::unique_ptr<Expression>> stops) {
                     return categorical<bool>(type_, *property, std::move(stops));
                 });
             default:
@@ -795,15 +820,15 @@ optional<std::unique_ptr<Expression>> convertFunctionToExpression(type::Type typ
         if (toNumber(*sourceValue)) {
             switch (functionType) {
             case FunctionType::Interval:
-                return composite<double>(type, value, err, [&] (type::Type type_, double, std::map<double, std::unique_ptr<Expression>> stops) {
+                return compositeStep<double>(type, value, err, [&] (type::Type type_, double, std::map<double, std::unique_ptr<Expression>> stops) {
                     return step(type_, number(get(literal(*property))), std::move(stops));
                 });
             case FunctionType::Exponential:
-                return composite<double>(type, value, err, [&] (type::Type type_, double base, std::map<double, std::unique_ptr<Expression>> stops) {
+                return compositeInterpolate<double>(type, value, err, [&] (type::Type type_, double base, std::map<double, std::unique_ptr<Expression>> stops) {
                     return interpolate(type_, exponential(base), number(get(literal(*property))), std::move(stops));
                 });
             case FunctionType::Categorical:
-                return composite<int64_t>(type, value, err, [&] (type::Type type_, double, std::map<int64_t, std::unique_ptr<Expression>> stops) {
+                return compositeStep<int64_t>(type, value, err, [&] (type::Type type_, double, std::map<int64_t, std::unique_ptr<Expression>> stops) {
                     return categorical<int64_t>(type_, *property, std::move(stops));
                 });
             default:
@@ -815,7 +840,7 @@ optional<std::unique_ptr<Expression>> convertFunctionToExpression(type::Type typ
         if (toString(*sourceValue)) {
             switch (functionType) {
             case FunctionType::Categorical:
-                return composite<std::string>(type, value, err, [&] (type::Type type_, double, std::map<std::string, std::unique_ptr<Expression>> stops) {
+                return compositeStep<std::string>(type, value, err, [&] (type::Type type_, double, std::map<std::string, std::unique_ptr<Expression>> stops) {
                     return categorical<std::string>(type_, *property, std::move(stops));
                 });
             default:
