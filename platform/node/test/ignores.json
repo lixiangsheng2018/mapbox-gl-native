@@ -25,7 +25,6 @@
   "expression-tests/legacy/identity/enum-default": "https://github.com/mapbox/mapbox-gl-native/issues/12747",
   "expression-tests/legacy/interval/array-default": "https://github.com/mapbox/mapbox-gl-native/issues/12747",
   "expression-tests/legacy/interval/color-default": "https://github.com/mapbox/mapbox-gl-native/issues/12747",
-  "expression-tests/legacy/interval/composite": "https://github.com/mapbox/mapbox-gl-native/issues/12747",
   "expression-tests/legacy/interval/composite-default": "https://github.com/mapbox/mapbox-gl-native/issues/12747",
   "expression-tests/legacy/interval/number-default": "https://github.com/mapbox/mapbox-gl-native/issues/12747",
   "expression-tests/legacy/interval/string-default": "https://github.com/mapbox/mapbox-gl-native/issues/12747",

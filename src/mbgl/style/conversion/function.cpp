@@ -821,6 +821,7 @@ optional<std::unique_ptr<Expression>> convertFunctionToExpression(type::Type typ
             switch (functionType) {
             case FunctionType::Interval:
                 return compositeStep<double>(type, value, err, [&] (type::Type type_, double, std::map<double, std::unique_ptr<Expression>> stops) {
+                    omitFirstStop(stops);
                     return step(type_, number(get(literal(*property))), std::move(stops));
                 });
             case FunctionType::Exponential:
