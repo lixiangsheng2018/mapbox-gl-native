@@ -1135,7 +1135,7 @@ optional<Error> SymbolLayer::setPaintProperty(const std::string& name, const Con
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::IconOpacity || property == Property::IconHaloWidth || property == Property::IconHaloBlur || property == Property::TextOpacity || property == Property::TextHaloWidth || property == Property::TextHaloBlur) {
@@ -1417,7 +1417,7 @@ optional<Error> SymbolLayer::setLayoutProperty(const std::string& name, const Co
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::SymbolPlacement) {

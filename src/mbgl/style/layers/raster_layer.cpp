@@ -324,7 +324,7 @@ optional<Error> RasterLayer::setPaintProperty(const std::string& name, const Con
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::RasterOpacity || property == Property::RasterHueRotate || property == Property::RasterBrightnessMin || property == Property::RasterBrightnessMax || property == Property::RasterSaturation || property == Property::RasterContrast || property == Property::RasterFadeDuration) {

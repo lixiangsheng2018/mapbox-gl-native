@@ -483,7 +483,7 @@ optional<Error> LineLayer::setPaintProperty(const std::string& name, const Conve
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::LineOpacity || property == Property::LineWidth || property == Property::LineGapWidth || property == Property::LineOffset || property == Property::LineBlur) {
@@ -680,7 +680,7 @@ optional<Error> LineLayer::setLayoutProperty(const std::string& name, const Conv
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::LineCap) {

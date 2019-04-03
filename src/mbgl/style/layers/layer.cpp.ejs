@@ -193,7 +193,7 @@ optional<Error> <%- camelize(type) %>Layer::setPaintProperty(const std::string& 
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
     <%
         const paintConversions = {};
@@ -260,7 +260,7 @@ optional<Error> <%- camelize(type) %>Layer::setLayoutProperty(const std::string&
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
     <%
         const layoutConversions = {};

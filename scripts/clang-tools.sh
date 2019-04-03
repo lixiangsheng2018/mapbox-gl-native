@@ -3,6 +3,12 @@
 set -e
 set -o pipefail
 
+if [ `uname -s` = 'Darwin' ]; then
+    JOBS=$(sysctl -n hw.ncpu)
+else
+    JOBS=$(grep --count processor /proc/cpuinfo)
+fi
+
 CLANG_TIDY_PREFIX=${CLANG_TIDY_PREFIX:-$(scripts/mason.sh PREFIX clang-tidy VERSION 4.0.1)}
 CLANG_TIDY=${CLANG_TIDY:-${CLANG_TIDY_PREFIX}/bin/clang-tidy}
 CLANG_APPLY=${CLANG_APPLY:-${CLANG_TIDY_PREFIX}/bin/clang-apply-replacements}
@@ -25,11 +31,11 @@ export CDUP=$(git rev-parse --show-cdup)
 export CLANG_TIDY CLANG_APPLY CLANG_FORMAT
 
 function run_clang_tidy() {
-    FILES=$(git ls-files "src/mbgl/*.cpp" "platform/*.cpp" "test/*.cpp")
+    git -C ${CDUP} ls-files "src/mbgl/*.cpp" "platform/*.cpp" "test/*.cpp" | xargs -n 64 -I {} \
     ${CLANG_TIDY_PREFIX}/share/run-clang-tidy.py -j ${JOBS} \
         -clang-tidy-binary ${CLANG_TIDY} \
         -clang-apply-replacements-binary ${CLANG_APPLY} \
-        -fix ${FILES} 2>/dev/null || exit 1
+        -fix {}
 }
 
 function run_clang_tidy_diff() {

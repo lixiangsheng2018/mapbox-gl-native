@@ -233,7 +233,7 @@ optional<Error> HeatmapLayer::setPaintProperty(const std::string& name, const Co
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::HeatmapRadius || property == Property::HeatmapWeight) {

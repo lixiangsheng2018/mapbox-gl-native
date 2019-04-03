@@ -293,7 +293,7 @@ optional<Error> FillLayer::setPaintProperty(const std::string& name, const Conve
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::FillAntialias) {

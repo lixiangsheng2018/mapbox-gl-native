@@ -169,7 +169,7 @@ optional<Error> BackgroundLayer::setPaintProperty(const std::string& name, const
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::BackgroundColor) {

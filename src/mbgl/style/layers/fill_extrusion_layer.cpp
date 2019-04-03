@@ -324,7 +324,7 @@ optional<Error> FillExtrusionLayer::setPaintProperty(const std::string& name, co
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::FillExtrusionOpacity) {

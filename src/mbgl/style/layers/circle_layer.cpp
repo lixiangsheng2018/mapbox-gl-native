@@ -417,7 +417,7 @@ optional<Error> CircleLayer::setPaintProperty(const std::string& name, const Con
         return Error { "layer doesn't support this property" };
     }
 
-    Property property = static_cast<Property>(it->second);
+    auto property = static_cast<Property>(it->second);
 
         
     if (property == Property::CircleRadius || property == Property::CircleBlur || property == Property::CircleOpacity || property == Property::CircleStrokeWidth || property == Property::CircleStrokeOpacity) {
