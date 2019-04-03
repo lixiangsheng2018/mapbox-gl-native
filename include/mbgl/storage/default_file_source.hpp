@@ -174,6 +174,8 @@ public:
      */
     void put(const Resource&, const Response&);
 
+    void clearCache();
+
     // For testing only.
     void setOnlineStatus(bool);
 

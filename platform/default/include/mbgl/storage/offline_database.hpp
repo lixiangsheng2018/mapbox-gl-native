@@ -80,6 +80,8 @@ public:
     uint64_t getOfflineMapboxTileCount();
     bool exceedsOfflineMapboxTileCountLimit(const Resource&);
 
+    void clearCache();
+
 private:
     void initialize();
     void handleError(const mapbox::sqlite::Exception&, const char* action);

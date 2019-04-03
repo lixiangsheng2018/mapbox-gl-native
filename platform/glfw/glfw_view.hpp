@@ -17,7 +17,7 @@ public:
     float getPixelRatio() const;
 
     void setMap(mbgl::Map*);
-    
+
     void setRenderFrontend(GLFWRendererFrontend*);
 
     // Callback called when the user presses the key mapped to style change.
@@ -26,6 +26,10 @@ public:
 
     void setPauseResumeCallback(std::function<void()> callback) {
         pauseResumeCallback = callback;
+    };
+
+    void setClearCacheCallback(std::function<void()> callback) {
+        clearCacheCallback = callback;
     };
 
     void setOnlineStatusCallback(std::function<void()> callback) {
@@ -120,6 +124,7 @@ private:
 
     std::function<void()> changeStyleCallback;
     std::function<void()> pauseResumeCallback;
+    std::function<void()> clearCacheCallback;
     std::function<void()> onlineStatusCallback;
     std::function<void(mbgl::Map*)> animateRouteCallback;
 

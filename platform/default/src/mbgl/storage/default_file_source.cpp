@@ -176,6 +176,10 @@ public:
         offlineDatabase->put(resource, response);
     }
 
+    void clearCache() {
+        offlineDatabase->clearCache();
+    }
+
 private:
     expected<OfflineDownload*, std::exception_ptr> getDownload(int64_t regionID) {
         auto it = downloads.find(regionID);
@@ -313,6 +317,10 @@ void DefaultFileSource::resume() {
     
 void DefaultFileSource::put(const Resource& resource, const Response& response) {
     impl->actor().invoke(&Impl::put, resource, response);
+}
+
+void DefaultFileSource::clearCache() {
+    impl->actor().invoke(&Impl::clearCache);
 }
 
 // For testing only:

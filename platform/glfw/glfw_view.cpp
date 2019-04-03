@@ -224,6 +224,9 @@ void GLFWView::onKey(GLFWwindow *window, int key, int /*scancode*/, int action, 
         case GLFW_KEY_C:
             view->clearAnnotations();
             break;
+        case GLFW_KEY_F:
+            view->clearCacheCallback();
+            break;
         case GLFW_KEY_K:
             view->addRandomCustomPointAnnotations(1);
             break;
