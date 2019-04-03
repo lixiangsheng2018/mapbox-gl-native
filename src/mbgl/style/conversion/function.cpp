@@ -479,8 +479,8 @@ std::unique_ptr<Expression> categorical<bool>(type::Type type,
         std::move(it->second);
 
     std::vector<typename Case::Branch> convertedBranches;
-    convertedBranches.emplace_back(eq(get(literal(property)), literal(true)), std::move(trueCase));
-    convertedBranches.emplace_back(eq(get(literal(property)), literal(false)), std::move(falseCase));
+    convertedBranches.emplace_back(eq(get(literal(property)), literal(Value(true))), std::move(trueCase));
+    convertedBranches.emplace_back(eq(get(literal(property)), literal(Value(false))), std::move(falseCase));
 
     return std::make_unique<Case>(type, std::move(convertedBranches),
                                   def ? std::move(*def) : error("replaced with default"));
