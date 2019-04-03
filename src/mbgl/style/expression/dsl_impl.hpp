@@ -15,7 +15,7 @@ std::unique_ptr<Expression> compound(const char* op, Args... args) {
     return compound(op, vec(std::move(args)...));
 }
 
-} // namesapce dsl
+} // namespace dsl
 } // namespace expression
 } // namespace style
 } // namespace mbgl
