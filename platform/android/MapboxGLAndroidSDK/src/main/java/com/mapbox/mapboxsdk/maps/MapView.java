@@ -780,6 +780,24 @@ public class MapView extends FrameLayout implements NativeMapView.ViewCallback {
   }
 
   /**
+   * Set a callback that's invoked when the id of an icon is missing.
+   *
+   * @param listener The callback that's invoked when the id of an icon is missing
+   */
+  public void addOnStyleImageMissingListener(OnStyleImageMissingListener listener) {
+    mapChangeReceiver.addOnStyleImageMissingListener(listener);
+  }
+
+  /**
+   * Set a callback that's invoked when a map source has changed.
+   *
+   * @param listener The callback that's invoked when the source has changed
+   */
+  public void removeOnStyleImageMissingListener(OnStyleImageMissingListener listener) {
+    mapChangeReceiver.removeOnStyleImageMissingListener(listener);
+  }
+
+  /**
    * Interface definition for a callback to be invoked when the camera will change.
    * <p>
    * {@link MapView#addOnCameraWillChangeListener(OnCameraWillChangeListener)}
@@ -955,6 +973,21 @@ public class MapView extends FrameLayout implements NativeMapView.ViewCallback {
      * @param id the id of the source that has changed
      */
     void onSourceChangedListener(String id);
+  }
+
+  /**
+   * Interface definition for a callback to be invoked with the id of a missing icon.
+   * <p>
+   * {@link MapView#addOnStyleImageMissingListener(OnStyleImageMissingListener)}
+   * </p>
+   */
+  public interface OnStyleImageMissingListener {
+    /**
+     * Called when the map is missing an icon.
+     *
+     * @param id the id of the icon that is missing
+     */
+    void onStyleImageMissing(@NonNull String id);
   }
 
   /**

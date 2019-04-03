@@ -31,6 +31,8 @@ class MapChangeReceiver implements NativeMapView.StateCallback {
   private final List<MapView.OnDidFinishLoadingStyleListener> onDidFinishLoadingStyleListenerList
     = new CopyOnWriteArrayList<>();
   private final List<MapView.OnSourceChangedListener> onSourceChangedListenerList = new CopyOnWriteArrayList<>();
+  private final List<MapView.OnStyleImageMissingListener> OnStyleImageMissingListenerList
+    = new CopyOnWriteArrayList<>();
 
   @Override
   public void onCameraWillChange(boolean animated) {
@@ -214,6 +216,20 @@ class MapChangeReceiver implements NativeMapView.StateCallback {
     }
   }
 
+  @Override
+  public void onStyleImageMissing(String imageId) {
+    try {
+      if (!OnStyleImageMissingListenerList.isEmpty()) {
+        for (MapView.OnStyleImageMissingListener listener : OnStyleImageMissingListenerList) {
+          listener.onStyleImageMissing(imageId);
+        }
+      }
+    } catch (Throwable err) {
+      Logger.e(TAG, "Exception in onSourceChanged", err);
+      throw err;
+    }
+  }
+
   void addOnCameraWillChangeListener(MapView.OnCameraWillChangeListener listener) {
     onCameraWillChangeListenerList.add(listener);
   }
@@ -318,6 +334,14 @@ class MapChangeReceiver implements NativeMapView.StateCallback {
     onSourceChangedListenerList.remove(listener);
   }
 
+  void addOnStyleImageMissingListener(MapView.OnStyleImageMissingListener listener) {
+    OnStyleImageMissingListenerList.add(listener);
+  }
+
+  void removeOnStyleImageMissingListener(MapView.OnStyleImageMissingListener listener) {
+    OnStyleImageMissingListenerList.remove(listener);
+  }
+
   void clear() {
     onCameraWillChangeListenerList.clear();
     onCameraIsChangingListenerList.clear();
@@ -332,5 +356,6 @@ class MapChangeReceiver implements NativeMapView.StateCallback {
     onDidBecomeIdleListenerList.clear();
     onDidFinishLoadingStyleListenerList.clear();
     onSourceChangedListenerList.clear();
+    OnStyleImageMissingListenerList.clear();
   }
 }
